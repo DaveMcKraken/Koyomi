@@ -17,13 +17,14 @@ final class KoyomiCell: UICollectionViewCell {
     
     fileprivate let leftSemicircleView: UIView  = .init()
     fileprivate let rightSemicircleView: UIView = .init()
+    fileprivate let centerView: UIView = .init()
     
     static let identifier = "KoyomiCell"
     
     enum CellStyle {
         case standard, circle, semicircleEdge(position: SequencePosition), line(position: SequencePosition?)
         
-        enum SequencePosition { case left, middle, right }
+        enum SequencePosition { case left, middle, right, single }
     }
     
     // Internal properties
@@ -89,6 +90,7 @@ final class KoyomiCell: UICollectionViewCell {
             lineView.isHidden = true
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
+            centerView.isHidden = true
             
         // isSelected is always true
         case .circle:
@@ -99,11 +101,14 @@ final class KoyomiCell: UICollectionViewCell {
             lineView.isHidden = true
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
+            centerView.isHidden = true
             
         // isSelected is always true
         case .semicircleEdge(let position):
             lineView.isHidden = true
             circularView.isHidden = true
+            centerView.backgroundColor = color
+            centerView.isHidden = false
             
             if case .left = position {
                 rightSemicircleView.isHidden = false
@@ -112,19 +117,15 @@ final class KoyomiCell: UICollectionViewCell {
                 
                 leftSemicircleView.backgroundColor  = color
                 rightSemicircleView.backgroundColor = color
-                
-                // for bug: unnecessary line
-                leftSemicircleView.frame.size.width = bounds.width / 2 + 1
-                
+              
                 leftSemicircleView.mask(with: .left)
                 rightSemicircleView.mask(with: .none)
+ 
             } else if case .middle = position {
                 rightSemicircleView.isHidden = true
                 leftSemicircleView.isHidden  = true
                 self.backgroundColor = color
-                
-                leftSemicircleView.frame.size.width = bounds.width / 2
-                
+              
             } else if case .right = position {
                 rightSemicircleView.isHidden = false
                 leftSemicircleView.isHidden  = false
@@ -132,14 +133,26 @@ final class KoyomiCell: UICollectionViewCell {
                 
                 leftSemicircleView.backgroundColor  = color
                 rightSemicircleView.backgroundColor = color
-                
+              
                 leftSemicircleView.mask(with: .none)
+                rightSemicircleView.mask(with: .right)
+              
+            } else if case .single = position {
+                rightSemicircleView.isHidden = false
+                leftSemicircleView.isHidden  = false
+                self.backgroundColor = backgroundColor
+              
+                leftSemicircleView.backgroundColor  = color
+                rightSemicircleView.backgroundColor = color
+              
+                leftSemicircleView.mask(with: .left)
                 rightSemicircleView.mask(with: .right)
             }
             
         case .line(let position):
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
+            centerView.isHidden = true
             circularView.isHidden = true
             lineView.isHidden = false
             lineView.backgroundColor = color
@@ -157,6 +170,8 @@ final class KoyomiCell: UICollectionViewCell {
                 lineView.frame.size.width = bounds.width
                 lineView.frame.origin.x   = (bounds.width - lineView.frame.width) / 2
             case .right:
+                lineView.frame.origin.x = 0
+            case .single:
                 lineView.frame.origin.x = 0
             }
         }
@@ -202,6 +217,10 @@ private extension KoyomiCell {
         rightSemicircleView.frame = CGRect(x: bounds.width / 2, y: 0, width: bounds.width / 2, height: bounds.height)
         rightSemicircleView.isHidden = true
         addSubview(rightSemicircleView)
+      
+        centerView.frame = CGRect(x: bounds.width / 2 - 0.5, y: 0, width: 1, height: bounds.height)
+        centerView.isHidden = true
+        addSubview(centerView)
         
         addSubview(contentLabel)
         
@@ -217,6 +236,7 @@ private extension KoyomiCell {
         
         rightSemicircleView.frame = CGRect(x: bounds.width / 2, y: 0, width: bounds.width / 2, height: bounds.height)
         leftSemicircleView.frame  = CGRect(x: 0, y: 0, width: bounds.width / 2, height: bounds.height)
+        centerView.frame = CGRect(x: bounds.width / 2 - 0.5, y: 0, width: 1, height: bounds.height)
     }
     
     func configureCircularView() {
