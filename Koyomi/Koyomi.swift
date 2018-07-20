@@ -472,6 +472,8 @@ private extension Koyomi {
                         return .left
                     } else if let _ = model.sequenceDates.start, let end = model.sequenceDates.end , date == end {
                         return .right
+                    } else if model.selectedPeriodLength(with: indexPath) == 0 {
+                        return .single
                     } else {
                         return .middle
                     }
