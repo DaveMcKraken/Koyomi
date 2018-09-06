@@ -10,17 +10,22 @@ import UIKit
 import Koyomi
 
 class ViewController: UIViewController {
-
+  
     @IBOutlet fileprivate weak var koyomi: Koyomi! {
         didSet {
-            koyomi.circularViewDiameter = 0.2
+            koyomi.circularViewDiameter = 0.65
             koyomi.calendarDelegate = self
             koyomi.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             koyomi.weeks = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-            koyomi.style = .standard
+            koyomi.style = .monotone
             koyomi.dayPosition = .center
-            koyomi.selectionMode = .sequence(style: .semicircleEdge)
+            koyomi.selectionMode = .sequence(style: .connectedCircle)
             koyomi.selectedStyleColor = UIColor(red: 203/255, green: 119/255, blue: 223/255, alpha: 1)
+            koyomi.secondarySelectedStyleColor = UIColor(red: 203/255, green: 119/255, blue: 223/255, alpha: 0.6)
+            koyomi.beforeTodayColor = .gray
+            koyomi.useBeforeTodayColor = true
+            koyomi.otherMonthColor = .lightGray
+            koyomi.holidayColor = (saturday: .black, sunday: .black)
             koyomi
                 .setDayFont(size: 14)
                 .setWeekFont(size: 10)
@@ -29,6 +34,10 @@ class ViewController: UIViewController {
     @IBOutlet fileprivate weak var currentDateLabel: UILabel!
     
     fileprivate let invalidPeriodLength = 90
+  
+    @IBOutlet fileprivate weak var monthPicker: UITextField!
+    fileprivate let picker = UIPickerView()
+    fileprivate let years = ["2016", "2017", "2018", "2019", "2019"]
     
     @IBOutlet fileprivate weak var segmentedControl: UISegmentedControl! {
         didSet {
@@ -137,6 +146,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         currentDateLabel.text = koyomi.currentDateString()
+        monthPicker.inputView = picker
+        picker.dataSource = self
+        picker.delegate = self
     }
     
     // MARK: - Utility -
@@ -233,10 +245,13 @@ extension ViewController {
 extension ViewController: KoyomiDelegate {
     func koyomi(_ koyomi: Koyomi, didSelect date: Date?, forItemAt indexPath: IndexPath) {
         print("You Selected: \(date)")
+        print("\(koyomi.selected())")
     }
     
     func koyomi(_ koyomi: Koyomi, currentDateString dateString: String) {
         currentDateLabel.text = dateString
+        monthPicker.text = dateString
+
     }
     
     @objc(koyomi:shouldSelectDates:to:withPeriodLength:)
@@ -245,7 +260,45 @@ extension ViewController: KoyomiDelegate {
             print("More than \(invalidPeriodLength) days are invalid period.")
             return false
         }
+        // Disallow date selection if dates before today colored, as a usage example
+        if date ?? Date() < Calendar.current.startOfDay(for: Date()) && koyomi.useBeforeTodayColor { return false }
         return true
     }
+}
+
+// MARK: - Month UIPicker Delegate and DataSource
+
+extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+  
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return 2
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    switch component {
+    case 0:
+      return Month.count
+    default:
+      return 5
+    }
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    switch component {
+    case 0:
+      return DateFormatter().monthSymbols[row]
+    default:
+      return years[row]
+    }
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    let month = Month.init(rawValue: pickerView.selectedRow(inComponent: 0) + 1)!
+    let year = years[pickerView.selectedRow(inComponent: 1)]
+    monthPicker.text = DateFormatter().monthSymbols[pickerView.selectedRow(inComponent: 0) + 1] + " \(year)"
+    koyomi.display(month: month, year: Int(year) ?? 2018)
+    if component == 1 { monthPicker.endEditing(false) }
+  }
+
 }
 

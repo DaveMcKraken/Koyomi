@@ -17,12 +17,14 @@ final class KoyomiCell: UICollectionViewCell {
     
     fileprivate let leftSemicircleView: UIView  = .init()
     fileprivate let rightSemicircleView: UIView = .init()
-    fileprivate let centerView: UIView = .init()
-    
+  
+    fileprivate let leftConnectorView: UIView = .init()
+    fileprivate let rightConnectorView: UIView = .init()
+  
     static let identifier = "KoyomiCell"
     
     enum CellStyle {
-        case standard, circle, semicircleEdge(position: SequencePosition), line(position: SequencePosition?)
+      case standard, circle, semicircleEdge(position: SequencePosition), line(position: SequencePosition?), connectedCircle(position: SequencePosition)
         
         enum SequencePosition { case left, middle, right, single }
     }
@@ -54,6 +56,7 @@ final class KoyomiCell: UICollectionViewCell {
     var circularViewDiameter: CGFloat = 0.75 {
         didSet {
             configureCircularView()
+            configureConnectorViews()
         }
     }
     
@@ -81,7 +84,7 @@ final class KoyomiCell: UICollectionViewCell {
         adjustSubViewsFrame()
     }
     
-    func configureAppearanse(of style: CellStyle, withColor color: UIColor, backgroundColor: UIColor, isSelected: Bool) {
+  func configureAppearance(of style: CellStyle, withColor color: UIColor, secondaryColor: UIColor?, backgroundColor: UIColor, isSelected: Bool) {
         switch style {
         case .standard:
             self.backgroundColor = isSelected ? color : backgroundColor
@@ -90,8 +93,9 @@ final class KoyomiCell: UICollectionViewCell {
             lineView.isHidden = true
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
-            centerView.isHidden = true
-            
+            leftConnectorView.isHidden = true
+            rightConnectorView.isHidden = true
+          
         // isSelected is always true
         case .circle:
             circularView.backgroundColor = color
@@ -101,14 +105,15 @@ final class KoyomiCell: UICollectionViewCell {
             lineView.isHidden = true
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
-            centerView.isHidden = true
-            
+            leftConnectorView.isHidden = true
+            rightConnectorView.isHidden = true
+          
         // isSelected is always true
         case .semicircleEdge(let position):
             lineView.isHidden = true
             circularView.isHidden = true
-            centerView.backgroundColor = color
-            centerView.isHidden = false
+            leftConnectorView.isHidden = true
+            rightConnectorView.isHidden = true
             
             if case .left = position {
                 rightSemicircleView.isHidden = false
@@ -148,12 +153,60 @@ final class KoyomiCell: UICollectionViewCell {
                 leftSemicircleView.mask(with: .left)
                 rightSemicircleView.mask(with: .right)
             }
+          
+        // isSelected is always true
+        case .connectedCircle(let position):
+          lineView.isHidden = true
+          circularView.isHidden = true
+          rightSemicircleView.isHidden = true
+          leftSemicircleView.isHidden  = true
+          
+          if case .left = position {
+            self.backgroundColor = backgroundColor
+            
+            circularView.isHidden = false
+            rightConnectorView.isHidden = false
+            leftConnectorView.isHidden = true
+            
+            circularView.backgroundColor = color
+            rightConnectorView.backgroundColor = secondaryColor
+
+          } else if case .middle = position {
+            self.backgroundColor = backgroundColor
+            
+            leftConnectorView.isHidden = false
+            rightConnectorView.isHidden = false
+            
+            leftConnectorView.backgroundColor = secondaryColor
+            rightConnectorView.backgroundColor = secondaryColor
+            
+          } else if case .right = position {
+            self.backgroundColor = backgroundColor
+            
+            circularView.isHidden = false
+            rightConnectorView.isHidden = true
+            leftConnectorView.isHidden = false
+            
+            circularView.backgroundColor = color
+            leftConnectorView.backgroundColor = secondaryColor
+            
+          } else if case .single = position {
+            self.backgroundColor = backgroundColor
+            
+            circularView.isHidden = false
+            rightConnectorView.isHidden = true
+            leftConnectorView.isHidden = true
+            
+            circularView.backgroundColor = color
+
+          }
             
         case .line(let position):
             rightSemicircleView.isHidden = true
             leftSemicircleView.isHidden  = true
-            centerView.isHidden = true
             circularView.isHidden = true
+            leftConnectorView.isHidden = true
+            rightConnectorView.isHidden = true
             lineView.isHidden = false
             lineView.backgroundColor = color
             
@@ -207,6 +260,11 @@ private extension KoyomiCell {
     }
     
     func setup() {
+        leftConnectorView.isHidden = true
+        rightConnectorView.isHidden = true
+        addSubview(leftConnectorView)
+        addSubview(rightConnectorView)
+      
         circularView.isHidden = true
         addSubview(circularView)
         
@@ -217,10 +275,6 @@ private extension KoyomiCell {
         rightSemicircleView.frame = CGRect(x: bounds.width / 2, y: 0, width: bounds.width / 2, height: bounds.height)
         rightSemicircleView.isHidden = true
         addSubview(rightSemicircleView)
-      
-        centerView.frame = CGRect(x: bounds.width / 2 - 0.5, y: 0, width: 1, height: bounds.height)
-        centerView.isHidden = true
-        addSubview(centerView)
         
         addSubview(contentLabel)
         
@@ -236,13 +290,18 @@ private extension KoyomiCell {
         
         rightSemicircleView.frame = CGRect(x: bounds.width / 2, y: 0, width: bounds.width / 2, height: bounds.height)
         leftSemicircleView.frame  = CGRect(x: 0, y: 0, width: bounds.width / 2, height: bounds.height)
-        centerView.frame = CGRect(x: bounds.width / 2 - 0.5, y: 0, width: 1, height: bounds.height)
     }
     
     func configureCircularView() {
         let diameter = bounds.width * circularViewDiameter
         circularView.frame = CGRect(x: (bounds.width - diameter) / 2, y: (bounds.height - diameter) / 2, width: diameter, height: diameter)
         circularView.layer.cornerRadius = diameter / 2
+    }
+  
+    func configureConnectorViews() {
+        let diameter = bounds.width * circularViewDiameter
+        leftConnectorView.frame = CGRect(x: 0, y: (bounds.height - diameter) / 2, width: bounds.width / 2, height: diameter)
+        rightConnectorView.frame = CGRect(x: bounds.width / 2, y: (bounds.height - diameter) / 2, width: bounds.width / 2, height: diameter)
     }
     
     func configureLineView() {

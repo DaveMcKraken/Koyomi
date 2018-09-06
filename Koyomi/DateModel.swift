@@ -10,6 +10,12 @@ import UIKit
 
 public enum MonthType { case previous, current, next }
 
+public enum Month : Int {
+  case January = 1, February, March, April, May, June, July, August, September, October, November, December
+  public static var count: Int { return Month.December.hashValue + 1 }
+  
+}
+
 final class DateModel: NSObject {
     
     // Type properties
@@ -97,11 +103,22 @@ final class DateModel: NSObject {
         }
         return false
     }
-    
+  
+    func isBeforeToday(at indexPath: IndexPath) -> Bool {
+        let ref = Date.init(timeIntervalSinceReferenceDate: 0)
+        return (currentDates[indexPath.row].daysSince(ref) ?? 0 > Date().daysSince(ref) ?? 0)
+    }
+  
     func display(in month: MonthType) {
         currentDates = []
         currentDate = month == .current ? Date() : date(of: month)
         setup()
+    }
+  
+    func display(month: Month, year: Int) {
+      currentDates = []
+      currentDate = date(month: month, year: year)
+      setup()
     }
     
     func dateString(in month: MonthType, withFormat format: String) -> String {
@@ -109,9 +126,23 @@ final class DateModel: NSObject {
         formatter.dateFormat = format
         return formatter.string(from: date(of: month))
     }
+  
+    func dateString(month: Month, year: Int, withFormat format: String) -> String {
+      let formatter: DateFormatter = .init()
+      formatter.dateFormat = format
+      return formatter.string(from: date(month: month, year: year))
+    }
     
     func date(at indexPath: IndexPath) -> Date {
         return currentDates[indexPath.row]
+    }
+  
+    func selected() -> [Date] {
+        var dates = [Date]()
+        for d in selectedDates {
+          if d.value == true { dates.append(d.key) }
+        }
+        return dates.sorted()
     }
     
     func willSelectDate(at indexPath: IndexPath) -> Date? {
@@ -351,4 +382,13 @@ private extension DateModel {
         }()
         return calendar.date(byAdding: components, to: currentDate) ?? Date()
     }
+  
+    func date(month: Month, year: Int) -> Date {
+        var components = DateComponents()
+        components.month = month.rawValue
+        components.year = year
+        return calendar.date(from: components) ?? Date()
+    }
 }
+
+
