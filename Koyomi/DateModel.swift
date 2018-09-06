@@ -11,9 +11,8 @@ import UIKit
 public enum MonthType { case previous, current, next }
 
 public enum Month : Int {
-  case January = 1, February, March, April, May, June, July, August, September, October, November, December
-  public static var count: Int { return Month.December.hashValue + 1 }
-  
+    case January = 1, February, March, April, May, June, July, August, September, October, November, December
+    public static var count: Int { return Month.December.hashValue + 1 }
 }
 
 final class DateModel: NSObject {
@@ -116,9 +115,9 @@ final class DateModel: NSObject {
     }
   
     func display(month: Month, year: Int) {
-      currentDates = []
-      currentDate = date(month: month, year: year)
-      setup()
+        currentDates = []
+        currentDate = date(month: month, year: year)
+        setup()
     }
     
     func dateString(in month: MonthType, withFormat format: String) -> String {
@@ -126,21 +125,21 @@ final class DateModel: NSObject {
         formatter.dateFormat = format
         return formatter.string(from: date(of: month))
     }
-  
+    
     func dateString(month: Month, year: Int, withFormat format: String) -> String {
-      let formatter: DateFormatter = .init()
-      formatter.dateFormat = format
-      return formatter.string(from: date(month: month, year: year))
+        let formatter: DateFormatter = .init()
+        formatter.dateFormat = format
+        return formatter.string(from: date(month: month, year: year))
     }
     
     func date(at indexPath: IndexPath) -> Date {
         return currentDates[indexPath.row]
     }
-  
+    
     func selected() -> [Date] {
         var dates = [Date]()
         for d in selectedDates {
-          if d.value == true { dates.append(d.key) }
+            if d.value == true { dates.append(d.key) }
         }
         return dates.sorted()
     }
@@ -196,18 +195,18 @@ final class DateModel: NSObject {
                 sequenceDates.start = selectedDate
                 selectedDates[selectedDate] = true
                 
-            // user has selected sequence date
+                // user has selected sequence date
             } else if let _ = sequenceDates.start, let _ = sequenceDates.end {
                 sequenceDates.start = selectedDate
                 sequenceDates.end   = nil
                 selectedDates.forEach { selectedDates[$0.0] = selectedDate == $0.0 ? true : false }
                 
-            // user select selected date
+                // user select selected date
             } else if let start = sequenceDates.start , sequenceDates.end == nil && start == selectedDate {
                 sequenceDates.start = nil
                 selectedDates[selectedDate] = false
                 
-            // user has selected a date
+                // user has selected a date
             } else if let start = sequenceDates.start , sequenceDates.end == nil && start != selectedDate {
                 
                 let isSelectedBeforeDay = selectedDate < start
@@ -344,16 +343,16 @@ private extension DateModel {
         selectedDates = [:]
         
         guard let indexAtBeginning = indexAtBeginning(in: .current) else { return }
-
+        
         var components: DateComponents = .init()
         currentDates = (0..<DateModel.maxCellCount).flatMap { index in
-                components.day = index - indexAtBeginning
-                return calendar.date(byAdding: components, to: atBeginning(of: .current))
+            components.day = index - indexAtBeginning
+            return calendar.date(byAdding: components, to: atBeginning(of: .current))
             }
             .map { (date: Date) in
                 selectedDates[date] = false
                 return date
-            }
+        }
         
         let selectedDateKeys = selectedDates.keys(of: true)
         selectedDateKeys.forEach { selectedDates[$0] = true }

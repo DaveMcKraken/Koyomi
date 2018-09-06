@@ -34,16 +34,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		07695D62F9F5BFC27C7B9647C46873C2 /* KoyomiCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KoyomiCell.swift; sourceTree = "<group>"; };
+		07695D62F9F5BFC27C7B9647C46873C2 /* KoyomiCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = KoyomiCell.swift; sourceTree = "<group>"; tabWidth = 4; };
 		101C03BC0EED3CAF82CB984CE00B3C38 /* Pods-Koyomi_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Koyomi_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		2870212F19389AFBA6DF8131BEB9AA26 /* Pods-Koyomi_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Koyomi_Example.release.xcconfig"; sourceTree = "<group>"; };
 		2CA5E072E295FEAF120582BCE61C1809 /* Koyomi.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Koyomi.modulemap; sourceTree = "<group>"; };
 		31C8D8470E60BE0C50F813EA2EBFDD80 /* Pods-Koyomi_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Koyomi_Example-umbrella.h"; sourceTree = "<group>"; };
 		32749BBABAC7FDDBEDEA8A07694CFCEB /* Pods-Koyomi_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Koyomi_Example-frameworks.sh"; sourceTree = "<group>"; };
 		3BB24F7332347A6F6998E4ECD569EDA7 /* Koyomi-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Koyomi-prefix.pch"; sourceTree = "<group>"; };
-		3BFA62491CFE7997E27242D53DDA9C75 /* DateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
+		3BFA62491CFE7997E27242D53DDA9C75 /* DateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3DF918FAF6EB4BCF35FBBB8E15DF79E6 /* Pods-Koyomi_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Koyomi_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		3F86EF3A761CA396BE6792CF8BDCAED9 /* Koyomi.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Koyomi.swift; sourceTree = "<group>"; };
+		3F86EF3A761CA396BE6792CF8BDCAED9 /* Koyomi.swift */ = {isa = PBXFileReference; includeInIndex = 1; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = Koyomi.swift; sourceTree = "<group>"; tabWidth = 4; };
 		474A52F356F48C94D03DE75EEC1C1667 /* Koyomi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koyomi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		491ED8322504D99E68EB4585C11F4EB3 /* KoyomiLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KoyomiLayout.swift; sourceTree = "<group>"; };
 		4A87065A37E825C33D695FA3C0CE9F6B /* Pods_Koyomi_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Koyomi_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };

@@ -270,35 +270,35 @@ extension ViewController: KoyomiDelegate {
 
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
   
-  func numberOfComponents(in pickerView: UIPickerView) -> Int {
-    return 2
-  }
-  
-  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    switch component {
-    case 0:
-      return Month.count
-    default:
-      return 5
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
     }
-  }
   
-  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    switch component {
-    case 0:
-      return DateFormatter().monthSymbols[row]
-    default:
-      return years[row]
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch component {
+        case 0:
+            return Month.count
+        default:
+            return 5
+        }
     }
-  }
   
-  func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    let month = Month.init(rawValue: pickerView.selectedRow(inComponent: 0) + 1)!
-    let year = years[pickerView.selectedRow(inComponent: 1)]
-    monthPicker.text = DateFormatter().monthSymbols[pickerView.selectedRow(inComponent: 0) + 1] + " \(year)"
-    koyomi.display(month: month, year: Int(year) ?? 2018)
-    if component == 1 { monthPicker.endEditing(false) }
-  }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch component {
+        case 0:
+            return DateFormatter().monthSymbols[row]
+        default:
+            return years[row]
+        }
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let month = Month.init(rawValue: pickerView.selectedRow(inComponent: 0) + 1)!
+        let year = years[pickerView.selectedRow(inComponent: 1)]
+        monthPicker.text = DateFormatter().monthSymbols[pickerView.selectedRow(inComponent: 0) + 1] + " \(year)"
+        koyomi.display(month: month, year: Int(year) ?? 2018)
+        if component == 1 { monthPicker.endEditing(false) }
+    }
 
 }
 
