@@ -139,7 +139,7 @@ final class DateModel: NSObject {
     func selected() -> [Date] {
         var dates = [Date]()
         for d in selectedDates {
-            if d.value == true { dates.append(d.key) }
+            if d.value { dates.append(d.key) }
         }
         return dates.sorted()
     }
@@ -151,8 +151,10 @@ final class DateModel: NSObject {
     
     // Select date in programmatically
     func select(from fromDate: Date, to toDate: Date?) {
+        if selectionMode == .sequence { sequenceDates.start = calendar.startOfDay(for: fromDate) }
         if let toDate = toDate?.formated() {
             set(true, withFrom: fromDate, to: toDate)
+            if selectionMode == .sequence { sequenceDates.end = calendar.startOfDay(for: toDate) }
         } else if let fromDate = fromDate.formated() {
             selectedDates[fromDate] = true
         }
@@ -172,7 +174,7 @@ final class DateModel: NSObject {
     }
     
     func select(with indexPath: IndexPath) {
-        let selectedDate = date(at: indexPath)
+        let selectedDate = Calendar.current.startOfDay(for: date(at: indexPath))
         
         switch selectionMode {
         case .single:
