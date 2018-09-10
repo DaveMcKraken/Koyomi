@@ -334,12 +334,14 @@ final public class Koyomi: UICollectionView {
     
     public func display(in month: MonthType) {
         model.display(in: month)
+        if model.sequenceDates.start != nil { select(date: model.sequenceDates.start!, to: model.sequenceDates.end)}
         reloadData()
         calendarDelegate?.koyomi?(self, currentDateString: model.dateString(in: .current, withFormat: currentDateFormat))
     }
     
     public func display(month: Month, year: Int) {
         model.display(month: month, year: year)
+        if model.sequenceDates.start != nil { select(date: model.sequenceDates.start!, to: model.sequenceDates.end)}
         reloadData()
         calendarDelegate?.koyomi?(self, currentDateString: model.dateString(month: month, year: year, withFormat: currentDateFormat))
     }
@@ -497,7 +499,7 @@ private extension Koyomi {
             
             style = {
                 var sequencePosition: KoyomiCell.CellStyle.SequencePosition {
-                    let date = model.date(at: indexPath)
+                    let date = Calendar.current.startOfDay(for: model.date(at: indexPath))
                     if let start = model.sequenceDates.start, let _ = model.sequenceDates.end , date == start {
                         return .left
                     } else if let _ = model.sequenceDates.start, let end = model.sequenceDates.end , date == end {

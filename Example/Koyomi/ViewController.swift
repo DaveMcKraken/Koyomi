@@ -149,6 +149,11 @@ class ViewController: UIViewController {
         monthPicker.inputView = picker
         picker.dataSource = self
         picker.delegate = self
+        
+        // Preselect 1 week as example
+        koyomi.select(date: Calendar.current.startOfDay(for: Date()) , to: Date().addingTimeInterval(604800))
+        koyomi.reloadData()
+        
     }
     
     // MARK: - Utility -
